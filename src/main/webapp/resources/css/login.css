@@ -566,7 +566,7 @@ body {
 }
 
 .animated-title-img-pass {
-    width: 150px !important; 
+    width: 70px !important; 
     animation: zoomIn 5s normal infinite;
 }
 
