@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html">
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>#{facesContext.externalContext.initParameterMap['tituloApp']}</title>
+        <h:outputStylesheet library="css" name="login.css"/>
+        <h:outputStylesheet library="css" name="color.css"/>
+        <h:outputStylesheet library="css" name="dashboard.css"/>
+        <h:outputStylesheet library="css" name="all.css"/>
+        <h:outputStylesheet library="css" name="animate.css"/>
+        <link rel="shortcut icon" type="image/png" href="/demo/resources/images/favicon.png"/>
+        <ui:insert name="headArea" />
+    </h:head>
+    <h:body id="entiredPage">
+        <div id="container">
+            <div id="content">
+                <div class="login-title">
+                    <h1 class="animated-title">#{login.welcome}</h1>
+                    <span> 
+                        <i class="fas fa-leaf"></i>#{login.poweredBy}
+                        <h:graphicImage styleClass="mt-1 animated-title-img" id="img-log" library="images"
+                                        value="/resources/images/title_ok.png" />
+                    </span>
+                </div>
+                <div class="card-login" style="animation: lightSpeedIn 1s linear 1;">
+                    <div class="form-login">
+                        <ui:insert name="contentArea"/>
+                    </div>
+                    <div class="cta"><a href="login/changePass.xhtml">#{login.forgot}</a></div>
+                </div>
+            </div>
+        </div>
+        <h:outputLabel styleClass="div-footer" 
+                       value="#{facesContext.externalContext.initParameterMap['version']}, #{common.derechosGreen}">
+        </h:outputLabel>
+    </h:body>
+</html>
+

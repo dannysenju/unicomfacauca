@@ -1,0 +1,380 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:o="http://omnifaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:composition template="/views/templates/menu-layout.xhtml">
+        <ui:define name="bodyContent">
+            <c:if test="#{loginBean.rol eq 'ADMIN'}">
+                <div class="row">
+                    <div class="col-lg-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="media">
+                                    <span class="avatar avatar-xl mr-3">
+                                        <o:graphicImage styleClass="avatar avatar-xl mr-3"
+                                                        id="img-profile" value="#{imageUserBean.getImage(userBean.usuario.idusuario)}"  rendered="#{loginBean.hasImage}"
+                                                        lastModified="#{userBean.lastModified}"/>
+                                        <h:graphicImage library="images" styleClass="avatar avatar-xxl mr-3" rendered="#{not loginBean.hasImage}" 
+                                                        value="/resources/images/profile.png" />
+                                    </span>
+                                    <div class="media-body">
+                                        <h3 class="mr-1">#{adminBean.fullNameUser}</h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-9">
+                        <p:accordionPanel id="menu-admin" activeIndex="null">
+                            <p:tab title="#{common.createUser}" titletip="#{common.tooltipClic}" titleStyleClass="card">
+                                <h:form id="create-user-form">
+                                    <div class="card-header" id="create-user-header">
+                                        <h6>#{common.basicData}</h6>
+                                    </div>
+                                    <div class="card-body" id="create-user-body">
+                                        <fieldset class="form-fieldset">
+                                            <div class="row">
+                                                <div class="col-lg-4">
+                                                    <label class="form-label">#{login.userName}</label>
+                                                    <div class="input-group">
+                                                        <span class="input-group-prepend" id="basic-addon1">
+                                                            <span class="input-group-text">
+                                                                <i class="fas fa-user-ninja"></i>
+                                                            </span>
+                                                        </span>
+                                                        <p:inputText styleClass="form-control input-hidden-prime" id="edit-username" 
+                                                                     value="#{adminBean.newUser.username}" required="true" placeholder="#{login.userName}"
+                                                                     requiredMessage="#{common.requiredField}">
+                                                            <f:validator binding="#{valUser}"/>
+                                                            <p:ajax event="keyup" update="msj-username"/>
+                                                        </p:inputText>
+                                                    </div>
+                                                    <p:message id="msj-username" for="edit-username" styleClass="invalid" display="text"/>
+
+                                                </div>
+                                                <div class="col-lg-8">
+                                                    <label class="form-label">#{login.fullName}</label>
+                                                    <div class="input-group">
+                                                        <span class="input-group-prepend" id="basic-addon1">
+                                                            <span class="input-group-text">
+                                                                <i class="fas fa-user-tie"></i>
+                                                            </span>
+                                                        </span>
+                                                        <p:inputText styleClass="form-control input-hidden-prime" id="create-fullname" 
+                                                                     value="#{adminBean.newUser.nombreCompleto}" required="true" placeholder="#{login.fullName}"
+                                                                     requiredMessage="#{common.requiredField}">
+                                                            <f:validator binding="#{valUser}"/>
+                                                            <p:ajax event="keyup" update="msj-fullname"/>
+                                                        </p:inputText>
+                                                    </div>
+                                                    <p:message id="msj-fullname" for="create-fullname" styleClass="invalid" display="text"/>
+
+                                                </div>
+                                            </div>
+                                            <div style="padding-bottom: 10px;"/>
+                                            <div class="row">
+                                                <div class="col-lg-6">
+
+                                                    <label class="form-label">#{login.newPass}<span class="form-required">*</span></label>
+                                                    <div class="input-group">
+                                                        <span class="input-group-prepend "  id="basic-addon1">
+                                                            <label class="input-group-text fancy-checkbox">
+                                                                <input type="checkbox"  onclick="seePass('menu-admin:create-user-form:password')" />
+                                                                <i class="fas fa-eye unchecked"></i>
+                                                                <i class="fas fa-eye-slash checked"></i>
+                                                            </label>
+                                                        </span>
+                                                        <p:password maxlength="20" styleClass="form-control input-hidden-prime"
+                                                                    id="password" value="#{adminBean.pass}" required="true" requiredMessage="#{common.requiredField}"
+                                                                    placeholder="#{login.placeHolderPass}" feedback="true" promptLabel="#{login.protectionLevel}" weakLabel="#{login.weak}"
+                                                                    goodLabel="#{login.normal}" strongLabel="#{login.strong}">
+                                                            <f:validator validatorId="valPass" />
+                                                            <f:validateLength minimum="5" maximum="20"  />
+                                                            <f:attribute name="confirm" value="#{confirmPassword.submittedValue}" />
+                                                            <f:ajax event="blur" execute="password confirm" render="m_password" />
+                                                        </p:password>
+
+                                                    </div>
+                                                    <div class="input-group">
+                                                        <p:message id="m_password" for="password" styleClass="invalid" display="text" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <label class="form-label">#{login.confirmPass}<span class="form-required">*</span></label>
+                                                    <div class="input-group">
+                                                        <span class="input-group-prepend" id="basic-addon1">
+                                                            <label class="input-group-text fancy-checkbox">
+                                                                <input type="checkbox" onclick="seePass('menu-admin:create-user-form:confirm')" />
+                                                                <i class="fas fa-eye unchecked"></i>
+                                                                <i class="fas fa-eye-slash checked"></i>
+                                                            </label>
+                                                        </span>
+                                                        <p:password id="confirm" binding="#{confirmPassword}" maxlength="20" styleClass="form-control input-hidden-prime"
+                                                                    placeholder="#{login.confirmPass}" requiredMessage="#{common.requiredField}" required="true">
+                                                            <f:ajax event="keyup" execute="password confirm" render="m_password m_confirm" />
+                                                        </p:password>
+
+                                                    </div>
+                                                    <p:message id="m_confirm" for="confirm" styleClass="invalid" display="text" />
+                                                </div>
+                                            </div>
+                                            <div style="padding-bottom: 10px;"/>
+                                            <div class="row">
+                                                <div class="col-lg-5">
+                                                    <label class="form-label">#{login.rol}</label>
+                                                    <div class="input-group">
+                                                        <span class="input-group-prepend" id="basic-addon1">
+                                                            <span class="input-group-text">
+                                                                <i class="fas fa-arrow-circle-down"></i>
+                                                            </span>
+                                                        </span>
+
+                                                        <p:selectOneMenu id="console" value="#{adminBean.newUser.rol}" required="true"
+                                                                         requiredMessage="#{common.requiredField}"
+                                                                         styleClass="form-control custom-select select-hidden-prime">
+                                                            <f:selectItem itemLabel="#{common.selectItem}" itemValue="" />
+                                                            <f:selectItem itemLabel="#{rolMsg.rolLabel1}" itemValue="#{rolMsg.rolValue1}" />
+                                                            <f:selectItem itemLabel="#{rolMsg.rolLabel2}" itemValue="#{rolMsg.rolValue2}" />
+                                                            <f:selectItem itemLabel="#{rolMsg.rolLabel3}" itemValue="#{rolMsg.rolValue3}" />
+
+                                                        </p:selectOneMenu>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-lg-4">
+                                                    <label class="form-label">#{common.email}</label>
+                                                    <div class="input-group">
+                                                        <span class="input-group-prepend" id="basic-addon1">
+                                                            <span class="input-group-text">
+                                                                <i class="fab fa-mailchimp"></i>
+                                                            </span>
+                                                        </span>
+                                                        <p:inputText styleClass="form-control input-hidden-prime" id="create-email" 
+                                                                     value="#{adminBean.newUser.email}" placeholder="#{login.placeHolderEmail}">
+                                                            <f:validator validatorId="valEmail"/>
+                                                            <p:ajax event="keyup" update="email-msg"/>
+                                                        </p:inputText>
+                                                    </div>
+                                                    <p:message id="email-msg" for="create-email" styleClass="invalid" display="text" />
+                                                </div>
+                                                <div class="col-lg-3">
+                                                    <label class="form-label">#{common.phone}</label>
+                                                    <div class="input-group">
+                                                        <span class="input-group-prepend" id="basic-addon1">
+                                                            <span class="input-group-text">
+                                                                <i class="fas fa-mobile"></i>
+                                                            </span>
+                                                        </span>
+                                                        <p:inputText styleClass="form-control input-hidden-prime" id="create-phone" 
+                                                                     value="#{adminBean.newUser.telefono}" placeholder="#{common.placeHolderPhone}">
+                                                            <p:ajax event="keyup" update="phone-msg"/>
+                                                        </p:inputText>
+                                                    </div>
+                                                    <p:message id="phone-msg" for="create-phone" styleClass="invalid" display="text" />
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                    <div class="card-footer text-right" id="create-user-body">
+                                        <div class="d-flex">
+                                            <p:commandButton styleClass="btn btn-primary ml-auto btn-hidden-prime"
+                                                             id="create-user" 
+                                                             value="#{common.createBtn}" 
+                                                             action="#{adminBean.createUser()}"
+                                                             update="@form , msj-global-dash-form:msj-global-dash"
+                                                             />
+                                        </div>
+                                    </div>
+                                </h:form>
+                            </p:tab>
+                            <p:tab title="#{common.asignModules}" titletip="#{common.tooltipClic}" titleStyleClass="card">
+                                <h:form id="form-user-module">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-lg-2"></div>
+                                            <div class="col-lg-8">
+                                                <label class="form-label">#{common.selectUser}</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-prepend" id="basic-addon1">
+                                                        <span class="input-group-text">
+                                                            <i class="fe fe-arrow-down-circle"></i>
+                                                        </span>
+
+                                                        <p:selectOneMenu id="user-module" value="#{adminBean.userModule}" converter="usuarioConverter" 
+                                                                         autoWidth="true" panelStyleClass="width:392px"
+                                                                         valueChangeListener="#{adminBean.changeUserSelection}"
+                                                                         effect="fade" var="t"  filter="true" filterMatchMode="startsWith"
+                                                                         styleClass="form-control custom-select select-hidden-prime panel-width" >
+                                                            <f:selectItems value="#{adminBean.listUsers}" var="user" itemLabel="#{user.username} - #{user.nombreCompleto}" itemValue="#{user}" />
+                                                            <p:ajax update="@this, pickList"/>
+                                                            <p:column class="card-body">
+                                                                <div class="media">
+                                                                    <span class="avatar avatar-lg m-0">
+                                                                        <o:graphicImage styleClass="avatar avatar-lg m-0"
+                                                                                        id="img-profile" value="#{imageUserBean.getImage(t.idusuario)}" lastModified="#{userBean.lastModified}"/>
+                                                                    </span>
+                                                                    <div class="media-body ml-2">
+                                                                        <h4 class="m-0">#{t.nombreCompleto}</h4>
+                                                                        <p class="text-muted mb-0">#{t.rol}</p>
+                                                                        <ul class="social-links list-inline mb-0 mt-2">
+
+                                                                            <li class="list-inline-item">
+                                                                                <a style="background: #dae5f5;" href="javascript:void(0)" title="#{t.telefono}" data-toggle="tooltip" data-original-title="#{userBean.usuario.telefono}"><i class="fe fe-phone"></i></a>
+                                                                            </li>
+                                                                            <li class="list-inline-item">
+                                                                                <a  style="background: #dae5f5;" href="javascript:void(0)" title="#{t.email}" data-toggle="tooltip" data-original-title="#{userBean.usuario.email}"><i class="fe fe-mail"></i></a>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </p:column>
+
+                                                        </p:selectOneMenu>
+
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>   
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-lg-2"></div>
+                                            <div class="col-lg-8">
+                                                <label class="form-label">#{common.selectModules}</label>
+                                                <p:pickList id="pickList" value="#{adminBean.modules}" converter="moduloPickConverter"
+                                                            var="module" itemLabel="#{module.nombre}" itemValue="#{module}"
+                                                            addAllLabel="#{common.addAllLabel}" addLabel="#{common.addLabel}" 
+                                                            removeAllLabel="#{common.removeAllLabel}"
+                                                            removeLabel="#{common.removeLabel}"
+                                                            />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer text-right">
+                                        <div class="d-flex">
+                                            <p:commandButton id="moduleSubmit" value="Asignar Módulos" action="#{adminBean.assignModules()}"
+                                                             update=":msj-global-dash-form:msj-global-dash, @form, pickList, "  styleClass="btn btn-primary ml-auto btn-hidden-prime"/>
+                                        </div>
+                                    </div>
+                                </h:form>
+                            </p:tab>
+                            <p:tab title="#{common.downUp}" id="delete-activate" titletip="#{common.tooltipClic}" titleStyleClass="card">
+                                <h:form id="delete-user">
+                                    <p:tooltip />
+                                    <p:dataGrid var="user" value="#{adminBean.listUsers}" columns="3" layout="grid" styleClass="card-body div-hidden-prime" paginatorPosition="bottom"
+                                                emptyMessage="#{common.emptyList}" currentPageReportTemplate="{startRecord} - {endRecord} de {totalRecords}"
+                                                rows="6" paginator="true" id="users" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                                rowsPerPageTemplate="6,12,16">
+
+                                        <f:facet name="header">
+                                            <h6 class="text-center" style="padding-top: 10px; margin: auto;">
+                                                #{common.userList}
+                                            </h6>
+                                        </f:facet>
+                                        <div class="card" style="border-left: #{user.activo eq 0 ? '3px solid #cd201f !important; background: #868e9647; color: #000;' : ''};">
+                                            <div class="row">
+                                                <div class="col-sm-4 ml-4 mt-2 mb-0 mr-0">
+                                                    <span class="avatar avatar-xxl" style="animation: tada 2s linear infinite;" >
+                                                        <o:graphicImage styleClass="avatar avatar-xxl" id="delete-profile" value="#{imageUserBean.getImage(user.idusuario)}" rendered="#{user.imagen ne null}"
+                                                                        lastModified="#{userBean.lastModified}"/>
+
+                                                        <h:graphicImage library="images" styleClass="avatar avatar-xxl" rendered="#{user.imagen eq null}" 
+                                                                        value="/resources/images/profile.png" />
+                                                    </span>
+                                                </div>
+                                                <div class="col-sm-4 mt-6">
+                                                    <div class="media-body">
+                                                        <h6 class="m-0">#{user.username}</h6>
+                                                        <p class="text-muted m-0" style="color: #{user.activo eq 0 ? '#000 !important;' : ''};">#{login.rol} #{user.rol}</p>
+                                                    </div>
+
+                                                </div>
+                                                <div class="col-sm-3" >
+                                                    <div class="media-body">
+                                                        <ul class="social-links list-inline mb-0 mt-6">
+                                                            <li class="list-inline-item">
+                                                                <p:commandButton styleClass="delete-icon" title="#{common.inactiveTool}" id="select-delete" onclick="PF('dlgDelete').show();"
+                                                                                 icon="fa fa-trash" rendered="#{user.activo eq 1}">
+                                                                    <f:setPropertyActionListener value="#{user}" target="#{adminBean.userToDelete}" />
+                                                                </p:commandButton>
+                                                                <p:commandButton styleClass="activate-icon" title="#{common.activateTool}" id="select-activate" onclick="PF('dlgActive').show();"
+                                                                                 icon="fa fa-power-off" rendered="#{user.activo eq 0}">
+                                                                    <f:setPropertyActionListener value="#{user}" target="#{adminBean.userToDelete}" />
+                                                                </p:commandButton>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <p class="text-muted ml-2 mb-1 mt-0" style="color: #{user.activo eq 0 ? '#000 !important;' : ''};">
+                                                #{user.nombreCompleto}</p>
+                                        </div>    
+
+                                    </p:dataGrid>
+                                    <p:dialog header="#{common.deleteUser}" widgetVar="dlgDelete" minHeight="135" draggable="false" height="135" 
+                                              hideEffect="explode" showEffect="explode" showHeader="false" closable="false" minimizable="false" modal="true"
+                                              resizable="false" >
+
+                                        <div class="card-body">
+                                            <h3 class="text-center" style="margin: auto;">
+                                                #{common.areYouSure}
+                                            </h3>
+                                        </div>
+
+                                        <div class="card-footer">
+                                            <div class="card-options text-center">
+                                                <a href="#" class="btn btn-danger btn-sm mr-1" style="margin: 0 auto; color: #fff;" onclick="confirmDialog()">#{common.yes}
+                                                    <i class="far fa-trash-alt"></i>
+                                                    <p:remoteCommand name="confirmDeleteUser" action="#{adminBean.deleteUser(adminBean.userToDelete)}" 
+                                                                     update="@form, msj-global-dash-form:msj-global-dash"/>
+                                                </a>
+                                                <a class="btn btn-warning btn-sm ml-1" style="margin: 0 auto;" onclick="PF('dlgDelete').hide();">#{common.no}
+                                                    <i class="fas fa-undo-alt"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </p:dialog>
+                                    <p:dialog header="Activar Usuario" widgetVar="dlgActive" minHeight="135" draggable="false" height="135" 
+                                              hideEffect="explode" showEffect="explode" showHeader="false" closable="false" minimizable="false" modal="true"
+                                              resizable="false" >
+
+                                        <div class="card-body">
+                                            <h3 class="text-center" style="margin: auto;">
+                                                #{common.areYouSure}
+                                            </h3>
+                                        </div>
+
+                                        <div class="card-footer">
+                                            <div class="card-options text-center">
+                                                <a href="#" class="btn btn-success btn-sm mr-1" style="margin: 0 auto; color: #fff;" onclick="activate()">#{common.yes}
+                                                    <i class="fas fa-power-off"></i>
+                                                    <p:remoteCommand name="confirmActivateUser" 
+                                                                     action="#{adminBean.activateUser(adminBean.userToDelete)}" 
+                                                                     update="@form , msj-global-dash-form:msj-global-dash"/>
+                                                </a>
+                                                <a class="btn btn-warning btn-sm ml-1" style="margin: 0 auto;" onclick="PF('dlgActive').hide();">#{common.no}
+                                                    <i class="fas fa-undo-alt"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </p:dialog> 
+                                </h:form>
+                            </p:tab>
+                        </p:accordionPanel>
+                    </div>
+                </div>
+            </c:if>
+            <c:if test="#{loginBean.rol ne 'ADMIN'}">
+                <div class="row text-center">
+                    <div class="col-lg-12">
+                        <h1>#{common.denied}</h1>
+                    </div>
+                </div>
+            </c:if>
+        </ui:define>
+    </ui:composition>
+</html>

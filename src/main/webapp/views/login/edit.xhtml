@@ -1,0 +1,265 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:o="http://omnifaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/views/templates/menu-layout.xhtml">
+        <ui:define name="bodyContent">
+
+            <div class="row">
+                <div class="col-lg-4">
+                    <h:form id="edit-basic">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="media">
+                                    <span class="avatar avatar-xxl mr-5">
+                                        <o:graphicImage styleClass="avatar avatar-xxl mr-8"
+                                                        id="img-profile" value="#{imageUserBean.getImage(userBean.usuario.idusuario)}" 
+                                                        lastModified="#{userBean.lastModified}"/>
+                                    </span>
+                                    <div class="media-body">
+                                        <h1 class="m-0">#{userBean.fullNameUser}</h1>
+                                        <p class="text-muted mb-0">#{login.rol} #{loginBean.rol}</p>
+                                        <p class="text-muted mb-0">#{login.username} #{userBean.usuario.username}</p>
+                                        <ul class="social-links list-inline mb-0 mt-2">
+
+                                            <li class="list-inline-item">
+                                                <a href="javascript:void(0)" title="#{userBean.usuario.telefono}" data-toggle="tooltip" data-original-title="#{userBean.usuario.telefono}"><i class="fe fe-phone"></i></a>
+                                            </li>
+                                            <li class="list-inline-item">
+                                                <a href="javascript:void(0)" title="#{userBean.usuario.email}" data-toggle="tooltip" data-original-title="#{userBean.usuario.email}"><i class="fe fe-mail"></i></a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">#{login.basicData}</h3>
+
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-auto">
+                                        <span class="avatar avatar-xl" >
+                                            <h:graphicImage library="images" styleClass="avatar avatar-xl"
+                                                            value="/resources/images/profile.png" />
+                                        </span>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label class="form-label">#{login.fullName}</label>
+
+                                            <p:inputText styleClass="form-control input-hidden-prime" id="edit-fullname" 
+                                                         value="#{userBean.usuario.nombreCompleto}" required="true"
+                                                         requiredMessage="#{common.requiredField}">
+                                                <p:ajax event="keyup" update="msj-fullname"/>
+                                            </p:inputText>
+                                            <p:message id="msj-fullname" for="edit-fullname" styleClass="invalid" display="text"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">#{login.userName}</label>
+
+                                    <div class="input-group">
+                                        <span class="input-group-prepend" id="basic-addon1">
+                                            <span class="input-group-text">
+                                                <i class="fe fe-user"></i>
+                                            </span>
+                                        </span>
+                                        <p:inputText styleClass="form-control input-hidden-prime" id="edit-username" 
+                                                     value="#{userBean.usuario.username}" required="true"
+                                                     requiredMessage="#{common.requiredField}">
+                                            <p:ajax event="keyup" update="msj-username"/>
+                                        </p:inputText>
+                                    </div>
+                                    <p:message id="msj-username" for="edit-username" styleClass="invalid" display="text"/>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">#{common.email}</label>
+
+                                    <div class="input-group">
+                                        <span class="input-group-prepend" id="basic-addon1">
+                                            <span class="input-group-text">
+                                                <i class="fa fa-envelope-open"></i>
+                                            </span>
+                                        </span>
+                                        <p:inputText styleClass="form-control input-hidden-prime" id="edit-email" 
+                                                     value="#{userBean.usuario.email}" required="true"
+                                                     requiredMessage="#{common.requiredField}">
+                                            <p:ajax event="keyup" update="msj-email"/>
+                                        </p:inputText>
+                                    </div>
+                                    <p:message id="msj-email" for="edit-email" styleClass="invalid" display="text"/>
+                                </div>
+                                <div class="form-footer">
+                                    <p:commandButton styleClass="btn btn-primary btn-block btn-hidden-prime"
+                                                     id="updateButton" 
+                                                     value="#{common.updateBtn}" 
+                                                     action="#{userBean.updateBasicData()}"
+                                                     update="@form, msj-global-dash-form:msj-global-dash" />
+                                </div>
+                            </div>
+                        </div>
+                    </h:form>
+                </div>
+                <div class="col-lg-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="input-group">
+
+                                <div class="input-group-append">
+                                    <span class="input-group-prepend" id="basic-addon-camera">
+                                        <i class="fe fe-camera"> <span>#{login.selectPhoto}</span>
+                                        </i>
+                                    </span>    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="media">
+                                        <div class="input-group">
+                                            <div class="form-label"><span class="form-required">#{common.maxWeight}</span></div>
+                                            <div class="file">
+                                                <h:form id="form-edit-image" styleClass="card" enctype="multipart/form-data">
+                                                    <p:messages closable="true" globalOnly="false" id="edit-image-msj" showIcon="false" autoUpdate="false"/>
+                                                    <p:fileUpload mode="advanced" id="edit-image"
+                                                                  styleClass="file-input"
+                                                                  allowTypes="/(\.|\/)(gif|jpe?g|png)$/" fileLimit="1" fileLimitMessage="#{login.limitImage}"
+                                                                  invalidFileMessage="#{login.extNotSupported}" 
+
+                                                                  invalidSizeMessage="#{common.limitSize}"
+                                                                  sizeLimit="1000000" uploadLabel="#{common.loadPhoto}" 
+                                                                  cancelLabel="#{common.cancelBtn}" update="@all"
+                                                                  label="#{common.selectBtn}" onstart="PF('blockCode').show();"
+                                                                  value="#{userBean.uploadedPicture}"
+                                                                  fileUploadListener="#{userBean.fileUploadListener}">
+                                                    </p:fileUpload>
+
+                                                    <p:message id="msj-image" for="edit-image" styleClass="invalid" display="text"/>
+                                                    <p:blockUI block="entiredPage" trigger="edit-image" widgetVar="blockCode" styleClass="block-div">
+                                                        <div class="row">
+                                                            <div class="col-2"></div>
+                                                            <div class="col-8 loading">
+                                                                <div class="loading-bar"></div>
+                                                                <div class="loading-bar"></div>
+                                                                <div class="loading-bar"></div>
+                                                                <div class="loading-bar"></div>
+                                                            </div>
+                                                            <div class="col-2"></div>
+                                                        </div>
+                                                        <div class="row">
+                                                            #{common.wait}
+                                                        </div>
+                                                    </p:blockUI>
+                                                </h:form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h:form id="form-edit-user" class="card">
+                        <div class="card-body">
+                            <h3 class="card-title">#{login.editPass}</h3>
+                            <div class="row">
+                                <div class="col-lg-2"></div>
+                                <div class="col-lg-8">
+                                    <label class="form-label">#{login.afterPass}<span class="form-required">*</span></label>
+                                    <div class="input-group div-form-validate">
+                                        <span class="input-group-prepend" id="basic-addon1">
+                                            <label class="input-group-text fancy-checkbox">
+                                                <input type="checkbox"  onclick="seePass('form-edit-user:edit-oldPass')" />
+                                                <i class="fe fe-eye unchecked"></i>
+                                                <i class="fe fe-eye-off checked"></i>
+                                            </label>
+                                        </span>
+                                        <p:password maxlength="20" placeholder="Contraseña" 
+                                                    styleClass="form-control input-hidden-prime" id="edit-oldPass" 
+                                                    value="#{userBean.oldPass}" required="true" requiredMessage="#{common.requiredField}">
+                                            <p:ajax event="keyup" update="msj-oldPass"/>
+                                        </p:password>
+
+                                    </div>
+                                    <div class="input-group">
+                                        <p:message id="msj-oldPass" for="edit-oldPass" styleClass="invalid" display="text"/>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2"></div>
+                                <div class="col-lg-2"></div>
+                                <div class="col-lg-8">
+
+                                    <label class="form-label">#{login.newPass}<span class="form-required">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-prepend "  id="basic-addon1">
+                                            <label class="input-group-text fancy-checkbox">
+                                                <input type="checkbox"  onclick="seePass('form-edit-user:password')" />
+                                                <i class="fe fe-eye unchecked"></i>
+                                                <i class="fe fe-eye-off checked"></i>
+                                            </label>
+                                        </span>
+                                        <p:password maxlength="20" styleClass="form-control input-hidden-prime"
+                                                    id="password" value="#{userBean.pass}" required="true" 
+                                                    requiredMessage="#{common.requiredField}"
+                                                    placeholder="#{login.placeHolderPass}" feedback="true" 
+                                                    promptLabel="#{login.protectionLevel}" 
+                                                    weakLabel="#{login.weak}"
+                                                    goodLabel="#{login.normal}" 
+                                                    strongLabel="#{login.strong}">
+                                            <f:validator validatorId="valPass" />
+                                            <f:validateLength minimum="5" maximum="20"  />
+                                            <f:attribute name="confirm" value="#{confirmPassword.submittedValue}" />
+                                            <f:ajax event="blur" execute="password confirm" render="m_password" />
+                                        </p:password>
+
+                                    </div>
+                                    <div class="input-group">
+                                        <p:message id="m_password" for="password" styleClass="invalid" display="text" />
+                                    </div>
+                                </div>
+                                <div class="col-lg-2"></div>
+                                <div class="col-lg-2"></div>
+                                <div class="col-lg-8">
+                                    <label class="form-label">#{login.confirmPass}<span class="form-required">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-prepend" id="basic-addon1">
+                                            <label class="input-group-text fancy-checkbox">
+                                                <input type="checkbox" onclick="seePass('form-edit-user:confirm')" />
+                                                <i class="fe fe-eye unchecked"></i>
+                                                <i class="fe fe-eye-off checked"></i>
+                                            </label>
+                                        </span>
+                                        <p:password id="confirm" binding="#{confirmPassword}" maxlength="20" styleClass="form-control input-hidden-prime"
+                                                    placeholder="#{login.placeHolderConfirmPass}" requiredMessage="#{common.requiredField}" required="true">
+                                            <f:ajax event="keyup" execute="password confirm" render="m_password m_confirm" />
+                                        </p:password>
+
+                                    </div>
+                                    <p:message id="m_confirm" for="confirm" styleClass="invalid" display="text" />
+                                </div>
+                                <div class="col-lg-2"></div>
+                            </div>
+                        </div>
+                        <div class="card-footer text-right">
+                            <div class="d-flex">
+                                <p:commandButton styleClass="btn btn-primary ml-auto btn-hidden-prime"
+                                                 id="updateButton" 
+                                                 value="#{common.updateBtn}" 
+                                                 action="#{userBean.updatePassword()}"
+                                                 update="@form"/>
+                            </div>
+                        </div>
+                    </h:form>
+                </div>
+            </div>
+        </ui:define>
+    </ui:composition>
+</html>
