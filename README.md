@@ -1,4 +1,4 @@
-# demo
+# Demo for unicomfacauca
 
 
 
@@ -6,7 +6,7 @@
 
 Build locally
 ```console
-$ git clone https://github.com/dannysenju/demo.git
+$ git clone https://github.com/dannysenju/unicomfacauca.git
 $ cd demo
 $ mvn clean install
 ```
