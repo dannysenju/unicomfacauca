@@ -29,6 +29,10 @@
             <var>rolMsg</var>
         </resource-bundle>
         <resource-bundle>    
+            <base-name>com.unicomfacauca.demo.message.matricula.matricula</base-name>
+            <var>matriMsg</var>
+        </resource-bundle>
+        <resource-bundle>    
             <base-name>com.unicomfacauca.demo.message.businesserrors.businesserrors</base-name>
             <var>business</var>
         </resource-bundle>

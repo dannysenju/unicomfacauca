@@ -1,0 +1,174 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:o="http://omnifaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <ui:composition template="/views/templates/menu-layout.xhtml">
+        <ui:define name="bodyContent">
+
+            <c:if test="#{loginBean.rol eq 'FUNC'}">
+                <div class="row">
+                    <div class="col-lg-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="media">
+                                    <span class="avatar avatar-xl mr-3">
+                                        <o:graphicImage styleClass="avatar avatar-xl mr-3"
+                                                        id="img-profile" value="#{imageUserBean.getImage(userBean.usuario.idusuario)}"  rendered="#{loginBean.hasImage}"
+                                                        lastModified="#{userBean.lastModified}"/>
+                                        <h:graphicImage library="images" styleClass="avatar avatar-xxl mr-3" rendered="#{not loginBean.hasImage}" 
+                                                        value="/resources/images/profile.png" />
+                                    </span>
+                                    <div class="media-body">
+                                        <h3 class="mr-1">#{matriculaBean.fullNameUser}</h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-9">
+                        <p:accordionPanel id="menu-matricula" activeIndex="null">
+                            <p:tab title="#{matriMsg.titleMat}" id="matricula-activate" titletip="#{common.tooltipClic}" titleStyleClass="card">
+                                <h:form id="matricula-form">
+                                    <p:tooltip />
+                                    <p:dataGrid var="student" value="#{matriculaBean.listStudents}" columns="3" layout="grid" styleClass="card-body div-hidden-prime" paginatorPosition="bottom"
+                                                emptyMessage="#{common.emptyList}" currentPageReportTemplate="{startRecord} - {endRecord} de {totalRecords}"
+                                                rows="6" paginator="true" id="students" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                                rowsPerPageTemplate="6,12,16">
+
+                                        <f:facet name="header">
+                                            <h6 class="text-center" style="padding-top: 10px; margin: auto;">
+                                                #{common.userList}
+                                            </h6>
+                                        </f:facet>
+                                        <div class="card">
+                                            <div class="row">
+                                                <div class="col-sm-4 ml-4 mt-2 mb-0 mr-0">
+                                                    <span class="avatar avatar-xxl" style="animation: tada 2s linear infinite;" >
+                                                        <h:graphicImage library="images" styleClass="avatar avatar-xxl" 
+                                                                        value="/resources/images/profile.png" />
+                                                    </span>
+                                                </div>
+                                                <div class="col-sm-4 mt-6">
+                                                    <div class="media-body">
+                                                        <h6 class="m-0">#{student.nombre} #{student.apellido}</h6>
+                                                        <p class="text-muted m-0">#{matriMsg.programa}: #{student.idprograma.nombre}</p>
+                                                    </div>
+
+                                                </div>
+                                                <div class="col-sm-3" >
+                                                    <div class="media-body">
+                                                        <ul class="social-links list-inline mb-0 mt-6">
+                                                            <li class="list-inline-item">
+                                                                <p:commandButton styleClass="activate-icon" title="#{matriMsg.nueva}" id="select-student" 
+                                                                                 icon="fa fa-pencil-ruler" action="#{matriculaBean.getCoursesForStudent()}" update="menu-matricula:form-matr-final" >
+                                                                    <f:setPropertyActionListener value="#{student}" target="#{matriculaBean.studentSelected}" />
+                                                                </p:commandButton>
+
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <p class="text-muted ml-2 mb-1 mt-0">
+                                                #{student.email}</p>
+                                        </div>    
+
+                                    </p:dataGrid>
+
+                                </h:form>
+                                <p:dialog header="#{matriMsg.titleMat}" widgetVar="dlgMatricula"  draggable="false" height="600px" width="800px" styleClass="card"
+                                          hideEffect="explode" showEffect="explode" showHeader="true" closable="true" minimizable="false" modal="true" resizable="false">
+                                    <h:form id="form-matr-final">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-lg-2"></div>
+                                                <div class="col-lg-8">
+                                                    <label class="form-label">Seleccione Materia:</label>
+                                                    <div class="input-group">
+                                                        <span class="input-group-prepend" id="basic-addon1">
+                                                            <span class="input-group-text">
+                                                                <i class="fe fe-arrow-down-circle"></i>
+                                                            </span>
+
+                                                            <p:selectOneMenu id="user-module" value="#{matriculaBean.materia}" converter="materiaConverter" 
+                                                                             autoWidth="true" panelStyleClass="width:392px"
+                                                                             effect="fade" var="t"  filter="true" filterMatchMode="startsWith"
+                                                                             styleClass="form-control custom-select select-hidden-prime panel-width" >
+                                                                <f:selectItems value="#{matriculaBean.listCourses}" var="mat" itemLabel="#{mat.nombre} - Semestre: #{mat.semestre} - Créditos: #{mat.numeroCreditos}" itemValue="#{mat}" />
+                                                                <p:ajax update="@this"/>
+                                                                <p:column class="card-body">
+                                                                    <div class="media">
+                                                                        <div class="media-body ml-2">
+                                                                            <h4 class="m-0">Nombre: #{t.nombre}</h4>
+                                                                            <p class="text-muted mb-0">Semestre: #{t.semestre}</p>
+                                                                            <p class="text-muted mb-0">Créditos: #{t.numeroCreditos}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                </p:column>
+
+                                                            </p:selectOneMenu>
+
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-lg-12">
+
+                                                    <p:fieldset id="availableCarsField" legend="Available Cars">
+                                                        <p:dataTable id="availableCars" var="car" value="#{dndCarsView.cars}">
+                                                            <p:column style="width:20px">
+                                                                <h:outputText id="dragIcon" styleClass="ui-icon pi pi-plus" />
+                                                                <p:draggable for="dragIcon" revert="true" helper="clone"/>
+                                                            </p:column>
+
+                                                            <p:column headerText="Id">
+                                                                <h:outputText value="#{car.id}" />
+                                                            </p:column>
+
+                                                            <p:column headerText="Year">
+                                                                <h:outputText value="#{car.year}" />
+                                                            </p:column>
+
+                                                            <p:column headerText="Brand">
+                                                                <h:outputText value="#{car.brand}" />
+                                                            </p:column>
+
+                                                            <p:column headerText="Color">
+                                                                <h:outputText value="#{car.color}" />
+                                                            </p:column>
+                                                        </p:dataTable>
+                                                    </p:fieldset>
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </h:form>
+
+                                </p:dialog>
+
+
+                            </p:tab>
+
+
+                        </p:accordionPanel>
+                    </div>
+                </div>
+            </c:if>
+            <c:if test="#{loginBean.rol ne 'FUNC'}">
+                <div class="row text-center">
+                    <div class="col-lg-12">
+                        <h1>#{common.denied}</h1>
+                    </div>
+                </div>
+            </c:if>
+        </ui:define>
+    </ui:composition>
+</html>

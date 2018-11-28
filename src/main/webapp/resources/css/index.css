@@ -596,6 +596,20 @@ body {
     box-shadow: none !important;
 }
 
+#menu-matricula\:matricula-form\:students .social-links li button {
+    border-radius: 50% !important;
+    color: #fff !important;
+    display: inline-block !important;
+    text-align: center !important;
+    height: 2.5rem !important;
+    width: 2.5rem !important;
+    line-height: 2.5rem !important;
+    border: 0 !important;
+    text-shadow: none !important;
+    font-weight: 300 !important;
+    box-shadow: none !important;
+}
+
 .block-div {
     width: 100px;
 }
