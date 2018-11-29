@@ -6,6 +6,7 @@
 package com.unicomfacauca.demo.service;
 
 import com.unicomfacauca.demo.domain.entities.Estudiante;
+import java.util.HashSet;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -22,7 +23,16 @@ public class EstudianteEJB {
     private EntityManager em;
 
     public List<Estudiante> getAllAvailableStudents() {
-        return em.createNamedQuery("Estudiante.findAll", Estudiante.class).getResultList();
+        
+        List<Estudiante> allStudents = em.createNamedQuery("Estudiante.findAll", Estudiante.class).getResultList();
+        
+        allStudents.removeAll(new HashSet(getAllStudentsWithEnrollment()));
+        
+        return allStudents;
+    }
+    
+    private List<Estudiante> getAllStudentsWithEnrollment(){
+        return em.createQuery("SELECT m.idestudiante from Matricula m ", Estudiante.class).getResultList();
     }
 
 }

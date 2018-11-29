@@ -10,13 +10,11 @@ import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -37,6 +35,12 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "TipoSemestre.findByActivo", query = "SELECT t FROM TipoSemestre t WHERE t.activo = :activo")})
 public class TipoSemestre implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+    @Id
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "idtipo_semestre")
+    private Integer idtipoSemestre;
     @Basic(optional = false)
     @NotNull
     @Column(name = "numero_creditos")
@@ -46,15 +50,7 @@ public class TipoSemestre implements Serializable {
     @Size(min = 1, max = 45)
     @Column(name = "activo")
     private String activo;
-
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tiposemestre_seq")
-    @SequenceGenerator(name = "tiposemestre_seq", sequenceName = "tiposemestre_seq",  initialValue = 1, allocationSize = 100)
-    @NotNull
-    @Column(name = "idtipo_semestre")
-    private Integer idtipoSemestre;
-    @OneToMany(mappedBy = "idtipoSemestre")
+    @OneToMany(mappedBy = "idtipoSemestre", fetch = FetchType.EAGER)
     private List<Programa> programaList;
 
     public TipoSemestre() {
@@ -86,6 +82,13 @@ public class TipoSemestre implements Serializable {
         this.numeroCreditos = numeroCreditos;
     }
 
+    public String getActivo() {
+        return activo;
+    }
+
+    public void setActivo(String activo) {
+        this.activo = activo;
+    }
 
     @XmlTransient
     public List<Programa> getProgramaList() {
@@ -119,15 +122,6 @@ public class TipoSemestre implements Serializable {
     @Override
     public String toString() {
         return "com.unicomfacauca.demo.domain.entities.TipoSemestre[ idtipoSemestre=" + idtipoSemestre + " ]";
-    }
-
-   
-    public String getActivo() {
-        return activo;
-    }
-
-    public void setActivo(String activo) {
-        this.activo = activo;
     }
     
 }

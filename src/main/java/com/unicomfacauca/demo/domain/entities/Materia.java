@@ -11,12 +11,10 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -39,9 +37,17 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Materia.findByIdmateria", query = "SELECT m FROM Materia m WHERE m.idmateria = :idmateria")
     , @NamedQuery(name = "Materia.findByNombre", query = "SELECT m FROM Materia m WHERE m.nombre = :nombre")
     , @NamedQuery(name = "Materia.findBySemestre", query = "SELECT m FROM Materia m WHERE m.semestre = :semestre")
-    , @NamedQuery(name = "Materia.findByNumeroCreditos", query = "SELECT m FROM Materia m WHERE m.numeroCreditos = :numeroCreditos")})
+    , @NamedQuery(name = "Materia.findByNumeroCreditos", query = "SELECT m FROM Materia m WHERE m.numeroCreditos = :numeroCreditos")
+    , @NamedQuery(name = "Materia.findByIdprograma", query = "SELECT m FROM Materia m WHERE m.idprograma = :idprograma")})
 public class Materia implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "materia_seq")
+    @SequenceGenerator(name = "materia_seq", sequenceName = "materia_seq",  initialValue = 40, allocationSize = 100)
+    @NotNull
+    @Column(name = "idmateria")
+    private Integer idmateria;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
@@ -55,23 +61,14 @@ public class Materia implements Serializable {
     @NotNull
     @Column(name = "numero_creditos")
     private int numeroCreditos;
-    
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idmateria")
-    private List<DetalleMatricula> detalleMatriculaList;
-
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "materia_seq")
-    @SequenceGenerator(name = "materia_seq", sequenceName = "materia_seq",  initialValue = 8, allocationSize = 100)
+    @Basic(optional = false)
     @NotNull
-    @Column(name = "idmateria")
-    private Integer idmateria;
-    @ManyToMany(mappedBy = "materiaList")
-    private List<Horario> horarioList;
-    
-    @JoinColumn(name = "idprograma", referencedColumnName = "idprograma")
-    @ManyToOne(optional = false)
-    private Programa idprograma;
+    @Column(name = "idprograma")
+    private int idprograma;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "materia")
+    private List<DetalleMatricula> detalleMatriculaList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "materia", fetch = FetchType.EAGER)
+    private List<MateriaHorario> materiaHorarioList;
 
     public Materia() {
     }
@@ -80,12 +77,12 @@ public class Materia implements Serializable {
         this.idmateria = idmateria;
     }
 
-    public Materia(Integer idmateria, String nombre, int semestre, int numeroCreditos) {
+    public Materia(Integer idmateria, String nombre, int semestre, int numeroCreditos, int idprograma) {
         this.idmateria = idmateria;
         this.nombre = nombre;
         this.semestre = semestre;
-        
         this.numeroCreditos = numeroCreditos;
+        this.idprograma = idprograma;
     }
 
     public Integer getIdmateria() {
@@ -96,6 +93,21 @@ public class Materia implements Serializable {
         this.idmateria = idmateria;
     }
 
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public int getSemestre() {
+        return semestre;
+    }
+
+    public void setSemestre(int semestre) {
+        this.semestre = semestre;
+    }
 
     public int getNumeroCreditos() {
         return numeroCreditos;
@@ -105,13 +117,30 @@ public class Materia implements Serializable {
         this.numeroCreditos = numeroCreditos;
     }
 
-    @XmlTransient
-    public List<Horario> getHorarioList() {
-        return horarioList;
+    public int getIdprograma() {
+        return idprograma;
     }
 
-    public void setHorarioList(List<Horario> horarioList) {
-        this.horarioList = horarioList;
+    public void setIdprograma(int idprograma) {
+        this.idprograma = idprograma;
+    }
+
+    @XmlTransient
+    public List<DetalleMatricula> getDetalleMatriculaList() {
+        return detalleMatriculaList;
+    }
+
+    public void setDetalleMatriculaList(List<DetalleMatricula> detalleMatriculaList) {
+        this.detalleMatriculaList = detalleMatriculaList;
+    }
+
+    @XmlTransient
+    public List<MateriaHorario> getMateriaHorarioList() {
+        return materiaHorarioList;
+    }
+
+    public void setMateriaHorarioList(List<MateriaHorario> materiaHorarioList) {
+        this.materiaHorarioList = materiaHorarioList;
     }
 
     @Override
@@ -138,47 +167,5 @@ public class Materia implements Serializable {
     public String toString() {
         return "com.unicomfacauca.demo.domain.entities.Materia[ idmateria=" + idmateria + " ]";
     }
-
-
-    @XmlTransient
-    public List<DetalleMatricula> getDetalleMatriculaList() {
-        return detalleMatriculaList;
-    }
-
-    public void setDetalleMatriculaList(List<DetalleMatricula> detalleMatriculaList) {
-        this.detalleMatriculaList = detalleMatriculaList;
-    }
-    
-    @XmlTransient
-    public Programa getIdprograma() {
-        return idprograma;
-    }
-
-    public void setIdprograma(Programa idprograma) {
-        this.idprograma = idprograma;
-    }
-
-
-   
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public int getSemestre() {
-        return semestre;
-    }
-
-    public void setSemestre(int semestre) {
-        this.semestre = semestre;
-    }
-
-    
-
-   
     
 }

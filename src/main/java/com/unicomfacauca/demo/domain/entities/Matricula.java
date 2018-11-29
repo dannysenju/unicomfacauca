@@ -6,10 +6,12 @@
 package com.unicomfacauca.demo.domain.entities;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -17,12 +19,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -37,14 +40,6 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "Matricula.findByNumeroMatricula", query = "SELECT m FROM Matricula m WHERE m.numeroMatricula = :numeroMatricula")})
 public class Matricula implements Serializable {
 
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 45)
-    @Column(name = "numero_matricula")
-    private String numeroMatricula;
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "matricula")
-    private DetalleMatricula detalleMatricula;
-
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "matricula_seq")
@@ -52,8 +47,15 @@ public class Matricula implements Serializable {
     @NotNull
     @Column(name = "idmatricula")
     private Integer idmatricula;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 45)
+    @Column(name = "numero_matricula")
+    private String numeroMatricula;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "matricula", fetch = FetchType.EAGER)
+    private List<DetalleMatricula> detalleMatriculaList;
     @JoinColumn(name = "idestudiante", referencedColumnName = "idestudiante")
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private Estudiante idestudiante;
 
     public Matricula() {
@@ -82,6 +84,15 @@ public class Matricula implements Serializable {
 
     public void setNumeroMatricula(String numeroMatricula) {
         this.numeroMatricula = numeroMatricula;
+    }
+
+    @XmlTransient
+    public List<DetalleMatricula> getDetalleMatriculaList() {
+        return detalleMatriculaList;
+    }
+
+    public void setDetalleMatriculaList(List<DetalleMatricula> detalleMatriculaList) {
+        this.detalleMatriculaList = detalleMatriculaList;
     }
 
     public Estudiante getIdestudiante() {
@@ -116,14 +127,5 @@ public class Matricula implements Serializable {
     public String toString() {
         return "com.unicomfacauca.demo.domain.entities.Matricula[ idmatricula=" + idmatricula + " ]";
     }
-
-    public DetalleMatricula getDetalleMatricula() {
-        return detalleMatricula;
-    }
-
-    public void setDetalleMatricula(DetalleMatricula detalleMatricula) {
-        this.detalleMatricula = detalleMatricula;
-    }
-
-        
+    
 }

@@ -8,16 +8,16 @@ package com.unicomfacauca.demo.domain.entities;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -39,6 +39,13 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Horario.findByDiaSemana", query = "SELECT h FROM Horario h WHERE h.diaSemana = :diaSemana")})
 public class Horario implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "schedule_seq")
+    @SequenceGenerator(name = "schedule_seq", sequenceName = "schedule_seq",  initialValue = 40, allocationSize = 100)
+    @NotNull
+    @Column(name = "idhorario")
+    private Integer idhorario;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
@@ -49,19 +56,10 @@ public class Horario implements Serializable {
     @Size(min = 1, max = 45)
     @Column(name = "dia_semana")
     private String diaSemana;
-
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "horario_seq")
-    @SequenceGenerator(name = "horario_seq", sequenceName = "horario_seq",  initialValue = 8, allocationSize = 100)
-    @NotNull
-    @Column(name = "idhorario")
-    private Integer idhorario;
-    @JoinTable(name = "materia_horario", joinColumns = {
-        @JoinColumn(name = "idhorario", referencedColumnName = "idhorario")}, inverseJoinColumns = {
-        @JoinColumn(name = "idmateria", referencedColumnName = "idmateria")})
-    @ManyToMany
-    private List<Materia> materiaList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "horario", fetch = FetchType.EAGER)
+    private List<MateriaHorario> materiaHorarioList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "horario1", fetch = FetchType.EAGER)
+    private List<MateriaHorario> materiaHorarioList1;
 
     public Horario() {
     }
@@ -101,12 +99,21 @@ public class Horario implements Serializable {
     }
 
     @XmlTransient
-    public List<Materia> getMateriaList() {
-        return materiaList;
+    public List<MateriaHorario> getMateriaHorarioList() {
+        return materiaHorarioList;
     }
 
-    public void setMateriaList(List<Materia> materiaList) {
-        this.materiaList = materiaList;
+    public void setMateriaHorarioList(List<MateriaHorario> materiaHorarioList) {
+        this.materiaHorarioList = materiaHorarioList;
+    }
+
+    @XmlTransient
+    public List<MateriaHorario> getMateriaHorarioList1() {
+        return materiaHorarioList1;
+    }
+
+    public void setMateriaHorarioList1(List<MateriaHorario> materiaHorarioList1) {
+        this.materiaHorarioList1 = materiaHorarioList1;
     }
 
     @Override
@@ -133,5 +140,5 @@ public class Horario implements Serializable {
     public String toString() {
         return "com.unicomfacauca.demo.domain.entities.Horario[ idhorario=" + idhorario + " ]";
     }
-
+    
 }

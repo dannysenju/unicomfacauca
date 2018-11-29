@@ -22,7 +22,7 @@ public class HorarioEJB {
     private EntityManager em;
 
     public List<Horario> getAllAvailableSchedule() {
-        return em.createNamedQuery("\"Horario.findAll", Horario.class).getResultList();
+        return em.createNamedQuery("Horario.findAll", Horario.class).getResultList();
     }
 
 }

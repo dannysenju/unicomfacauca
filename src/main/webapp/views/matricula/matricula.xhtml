@@ -42,7 +42,7 @@
 
                                         <f:facet name="header">
                                             <h6 class="text-center" style="padding-top: 10px; margin: auto;">
-                                                #{common.userList}
+                                                Listado de Estudiantes
                                             </h6>
                                         </f:facet>
                                         <div class="card">
@@ -81,83 +81,222 @@
                                     </p:dataGrid>
 
                                 </h:form>
-                                <p:dialog header="#{matriMsg.titleMat}" widgetVar="dlgMatricula"  draggable="false" height="600px" width="800px" styleClass="card"
+                                <p:dialog header="#{matriMsg.titleMat}" widgetVar="dlgMatricula"  draggable="false" height="600px" width="1050px" styleClass="card text-right"
                                           hideEffect="explode" showEffect="explode" showHeader="true" closable="true" minimizable="false" modal="true" resizable="false">
-                                    <h:form id="form-matr-final">
-                                        <div class="card-body">
-                                            <div class="row">
-                                                <div class="col-lg-2"></div>
-                                                <div class="col-lg-8">
-                                                    <label class="form-label">Seleccione Materia:</label>
-                                                    <div class="input-group">
-                                                        <span class="input-group-prepend" id="basic-addon1">
-                                                            <span class="input-group-text">
-                                                                <i class="fe fe-arrow-down-circle"></i>
-                                                            </span>
+                                    <div class="card-body">
+                                        <h:form id="form-matr-final">
+                                            <p:growl globalOnly="true" id="msj" showDetail="true" keepAlive="true" sticky="false" /> 
 
-                                                            <p:selectOneMenu id="user-module" value="#{matriculaBean.materia}" converter="materiaConverter" 
-                                                                             autoWidth="true" panelStyleClass="width:392px"
-                                                                             effect="fade" var="t"  filter="true" filterMatchMode="startsWith"
-                                                                             styleClass="form-control custom-select select-hidden-prime panel-width" >
-                                                                <f:selectItems value="#{matriculaBean.listCourses}" var="mat" itemLabel="#{mat.nombre} - Semestre: #{mat.semestre} - Créditos: #{mat.numeroCreditos}" itemValue="#{mat}" />
-                                                                <p:ajax update="@this"/>
-                                                                <p:column class="card-body">
-                                                                    <div class="media">
-                                                                        <div class="media-body ml-2">
-                                                                            <h4 class="m-0">Nombre: #{t.nombre}</h4>
-                                                                            <p class="text-muted mb-0">Semestre: #{t.semestre}</p>
-                                                                            <p class="text-muted mb-0">Créditos: #{t.numeroCreditos}</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </p:column>
+                                            <p:accordionPanel id="accordion">
+                                                <p:tab title="Materias:" titletip="#{common.tooltipClic}" id="tab-matricula-1" titleStyleClass="card card-hidden-prime">
+                                                    <div class="row mb-6">
+                                                        <div class="col-lg-2"></div>
+                                                        <div class="col-lg-8 ml-8">
+                                                            <label class="form-label">Seleccione Materia:</label>
+                                                            <div class="input-group">
+                                                                <span class="input-group-prepend" id="basic-addon1">
+                                                                    <span class="input-group-text">
+                                                                        <i class="fe fe-arrow-down-circle"></i>
+                                                                    </span>
 
-                                                            </p:selectOneMenu>
+                                                                    <p:selectOneMenu id="materia" value="#{matriculaBean.materia}" converter="materiaConverter" 
+                                                                                     autoWidth="true" panelStyleClass="width:392px" required="true" requiredMessage="#{common.requiredField}"
+                                                                                     effect="fade" var="t"  filter="true" filterMatchMode="startsWith" valueChangeListener="#{matriculaBean.changeMateSelection}"
+                                                                                     styleClass="form-control custom-select select-hidden-prime panel-width " >
+                                                                        <f:selectItems value="#{matriculaBean.listCourses}" var="mat" itemLabel="#{mat.nombre} - Semestre: #{mat.semestre} - Créditos: #{mat.numeroCreditos}" itemValue="#{mat}" />
+                                                                        <p:ajax update="@this, mate-msg, menu-matricula:form-matr-final:pickList-schedule" />
+                                                                        <p:column class="card-body">
+                                                                            <div class="media">
+                                                                                <div class="media-body ml-2">
+                                                                                    <h4 class="m-0">Nombre: #{t.nombre}</h4>
+                                                                                    <p class="text-muted mb-0">Semestre: #{t.semestre}</p>
+                                                                                    <p class="text-muted mb-0">Créditos: #{t.numeroCreditos}</p>
+                                                                                </div>
+                                                                            </div>
+                                                                        </p:column>
 
-                                                        </span>
+                                                                    </p:selectOneMenu>
+                                                                    <p:message id="mate-msg" for="materia" styleClass="invalid" display="text" />
+                                                                </span>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </div>
+                                                </p:tab>
+                                            </p:accordionPanel>
 
-                                            <div class="row">
+
+                                            <div class="row mt-2">
                                                 <div class="col-lg-12">
+                                                    <label class="form-label">Seleccionar Horario:</label>
+                                                    <p:pickList id="pickList-schedule" value="#{matriculaBean.scheduleList}" converter="horarioPickConverter" required="true" requiredMessage="#{common.requiredField}"
+                                                                var="hor" itemLabel="Jornada 1: #{hor.horarioIni.diaSemana} - #{hor.horarioIni.bloqueHorario} // Jornada 2: #{hor.horarioFin.diaSemana} - #{hor.horarioFin.bloqueHorario} " itemValue="#{hor}"
+                                                                addAllLabel="#{common.addAllLabel}" addLabel="#{common.addLabel}" 
+                                                                removeAllLabel="#{common.removeAllLabel}" 
+                                                                removeLabel="#{common.removeLabel}">
+                                                    </p:pickList>
+                                                    <p:message id="schedule-msg" for="pickList-schedule" styleClass="invalid" display="text" />
+                                                </div>
 
-                                                    <p:fieldset id="availableCarsField" legend="Available Cars">
-                                                        <p:dataTable id="availableCars" var="car" value="#{dndCarsView.cars}">
-                                                            <p:column style="width:20px">
-                                                                <h:outputText id="dragIcon" styleClass="ui-icon pi pi-plus" />
-                                                                <p:draggable for="dragIcon" revert="true" helper="clone"/>
-                                                            </p:column>
+                                            </div>
 
-                                                            <p:column headerText="Id">
-                                                                <h:outputText value="#{car.id}" />
-                                                            </p:column>
+                                            <div class="footer  text-right" id="agregar-matricula">
 
-                                                            <p:column headerText="Year">
-                                                                <h:outputText value="#{car.year}" />
-                                                            </p:column>
-
-                                                            <p:column headerText="Brand">
-                                                                <h:outputText value="#{car.brand}" />
-                                                            </p:column>
-
-                                                            <p:column headerText="Color">
-                                                                <h:outputText value="#{car.color}" />
-                                                            </p:column>
-                                                        </p:dataTable>
-                                                    </p:fieldset>
-
+                                                <div class="d-flex">
+                                                    <p class="text-muted mb-0">Número de Créditos: #{matriculaBean.countCredits}</p>
+                                                    <p:commandButton styleClass="btn btn-primary ml-auto btn-hidden-prime"
+                                                                     id="add-enroll" disabled="#{matriculaBean.isBlockAdd}"
+                                                                     value="#{matriMsg.addEnroll}" 
+                                                                     action="#{matriculaBean.add()}"
+                                                                     update="@form , msj , menu-matricula:save-form"
+                                                                     />
                                                 </div>
                                             </div>
-                                        </div>
+                                        </h:form>     
 
-                                    </h:form>
+                                        <h:form id="save-form">
+                                            <div class="footer">
+
+                                                <p:dataTable var="cour" id="matricula-final" value="#{matriculaBean.selectedCourses}"
+                                                             styleClass="card-body div-hidden-prime" paginatorPosition="bottom"
+                                                             emptyMessage="#{common.emptyList}" currentPageReportTemplate="{startRecord} - {endRecord} de {totalRecords}"
+                                                             rows="6" paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                                             rowsPerPageTemplate="6,12,16">
+                                                    <f:facet name="header">
+                                                        Matricula estudiante #{matriculaBean.studentSelected.nombre} #{matriculaBean.studentSelected.apellido}. Programa: #{matriculaBean.studentSelected.idprograma.nombre}
+                                                    </f:facet>
+                                                    <p:column headerText="Materia" width="60">
+                                                        <h:outputText value="#{cour.materia.nombre}" />
+                                                    </p:column>
+                                                    <p:column headerText="Créditos" width="60">
+                                                        <h:outputText value="#{cour.materia.numeroCreditos}" />
+                                                    </p:column>
+
+                                                    <p:column headerText="Semestre" width="60">
+                                                        <h:outputText value="#{cour.materia.semestre}" />
+                                                    </p:column>
+
+                                                    <p:column headerText="Programa" width="62">
+                                                        <h:outputText value="#{matriculaBean.matricula.idestudiante.idprograma.nombre}" />
+                                                    </p:column>
+
+                                                    <p:column headerText="Horario" width="300">
+                                                        <h:outputText value="Jornada 1: #{cour.horarioIni.diaSemana} #{cour.horarioIni.bloqueHorario} // Jornada 2: #{cour.horarioIni.diaSemana} #{cour.horarioIni.bloqueHorario}" />
+                                                    </p:column>
+
+                                                    <p:column headerText="Código Matrícula" width="125">
+                                                        <h:outputText value="#{matriculaBean.matricula.numeroMatricula}" />
+                                                    </p:column>
+
+                                                </p:dataTable>
+
+                                                <div class="d-flex">
+                                                    <p:commandButton styleClass="btn btn-primary ml-auto btn-hidden-prime"
+                                                                     id="add-enroll" disabled="#{not matriculaBean.isBlockAdd}"
+                                                                     value="#{common.createBtn} Mátricula" 
+                                                                     action="#{matriculaBean.save()}"
+                                                                     oncomplete="PF('dlgMatricula').hide();"
+                                                                     update="menu-matricula, msj-global-dash-form:msj-global-dash, menu-matricula:see-matriculas"
+                                                                     />
+                                                </div>
+                                            </div>
+                                        </h:form>
+
+                                    </div>
+
+
 
                                 </p:dialog>
 
 
                             </p:tab>
 
+                            <p:tab title="#{matriMsg.titleSeeMat}" id="see-matriculas" titletip="#{common.tooltipClic}" titleStyleClass="card">
+                                <h:form id="see-matricula-form">
+                                    <p:tooltip />
+                                    <p:dataTable var="enroll" value="#{matriculaBean.matriculas}" ayout="grid" styleClass="card-body div-hidden-prime" paginatorPosition="bottom"
+                                                 emptyMessage="#{common.emptyList}" currentPageReportTemplate="{startRecord} - {endRecord} de {totalRecords}"
+                                                 rows="6" paginator="true" id="enrollments" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                                 rowsPerPageTemplate="6,12,16" filteredValue="#{matriculaBean.filtroMatriculas}">
+                                        <p:column width="40">
+                                            <div class="m-1">
+                                                <span class="avatar avatar" style="animation: tada 2s linear infinite;" >
+                                                    <h:graphicImage library="images" styleClass="avatar avatar" 
+                                                                    value="/resources/images/profile.png" />
+                                                </span>
+                                            </div>
+                                        </p:column>
+                                        <p:column filterBy="#{enroll.numeroMatricula}" width="180" headerText="Número Matrícula" footerText="contiene" filterMatchMode="contains">
+                                            <div class="col-sm-4 m-0">
+                                                <div class="media-body">
+                                                    <h6 class="m-0">#{enroll.numeroMatricula}</h6>
+                                                </div>
+                                            </div>
+                                        </p:column>
 
+                                        <p:column filterBy="#{enroll.idestudiante.apellido}" width="120" headerText="Estudiante" footerText="contiene" filterMatchMode="contains">
+                                            <div class="col-sm-4 m-0">
+                                                <div class="media-body">
+                                                    <h6 class="m-0">#{enroll.idestudiante.nombre} #{enroll.idestudiante.apellido}</h6>
+                                                    <p class="text-muted m-0">#{enroll.idestudiante.idprograma.nombre}</p>
+                                                    <p class="text-muted m-0">#{enroll.idestudiante.email}</p>
+                                                </div>
+                                            </div>
+                                        </p:column>
+
+                                        <p:column width="220" headerText="materias" footerText="contiene" >
+
+                                            <ui:repeat value="#{enroll.detalleMatriculaList}" var="det">
+                                                <div class="row">
+                                                    <div class="media-body col-sm-4">
+                                                        <p class="text-muted m-0">#{det.materia.nombre}</p>
+                                                    </div>
+
+                                                    <div class="media-body col-sm-4">
+                                                        <p class="text-muted m-0">Semestre: #{det.materia.semestre}</p>
+                                                    </div>
+
+                                                    <div class="media-body col-sm-4">
+                                                        <p class="text-muted m-0">Creditos: #{det.materia.numeroCreditos}</p>
+                                                    </div>
+
+
+                                                </div>
+                                            </ui:repeat>
+
+                                        </p:column>
+
+
+                                        <div class="card">
+                                            <div class="row">
+
+                                                <div class="col-sm-4 mt-6">
+                                                    <div class="media-body">
+                                                        <h6 class="m-0">#{enroll.matricula.idestudiante.nombre} </h6>
+                                                        <p class="text-muted m-0">XXX</p>
+                                                    </div>
+
+                                                </div>
+                                                <div class="col-sm-3" >
+                                                    <div class="media-body">
+                                                        <ul class="social-links list-inline mb-0 mt-6">
+                                                            <li class="list-inline-item">
+                                                                <p:commandButton styleClass="activate-icon" title="#{matriMsg.nueva}" id="select-student" 
+                                                                                 icon="fa fa-pencil-ruler" action="#{matriculaBean.getCoursesForStudent()}" update="menu-matricula:form-matr-final" >
+
+                                                                </p:commandButton>
+
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <p class="text-muted ml-2 mb-1 mt-0">
+                                                #{student.email}</p>
+                                        </div>
+
+                                    </p:dataTable>
+                                </h:form>
+                            </p:tab>    
                         </p:accordionPanel>
                     </div>
                 </div>

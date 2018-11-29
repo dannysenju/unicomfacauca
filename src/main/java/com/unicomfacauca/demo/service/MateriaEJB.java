@@ -5,8 +5,9 @@
  */
 package com.unicomfacauca.demo.service;
 
-import com.unicomfacauca.demo.domain.entities.Estudiante;
+import com.unicomfacauca.demo.domain.entities.Horario;
 import com.unicomfacauca.demo.domain.entities.Materia;
+import com.unicomfacauca.demo.domain.entities.MateriaHorario;
 import com.unicomfacauca.demo.domain.entities.Programa;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -31,7 +32,11 @@ public class MateriaEJB {
         return em.createNamedQuery("Materia.findByIdmateria", Materia.class).setParameter("idmateria", id).getSingleResult();
     }
     public List<Materia> getAllCourseByProgram(Programa p) {
-        return em.createQuery("select m from Materia m where m.idprograma = :programa", Materia.class).setParameter("programa", p).getResultList();
+        return em.createQuery("select m from Materia m where m.idprograma = :programa", Materia.class).setParameter("programa", p.getIdprograma()).getResultList();
+    }
+    
+    public List<MateriaHorario> getScheduleForCourse(Materia m){
+        return em.createQuery("select mh from MateriaHorario mh where mh.materiaHorarioPK.idmateria = :materia", MateriaHorario.class).setParameter("materia", m.getIdmateria()).getResultList();
     }
 
 }

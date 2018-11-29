@@ -11,6 +11,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -39,28 +40,23 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Programa.findByNombre", query = "SELECT p FROM Programa p WHERE p.nombre = :nombre")})
 public class Programa implements Serializable {
 
-    @Size(max = 45)
-    @Column(name = "nombre")
-    private String nombre;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idprograma")
-    private List<DetalleMatricula> detalleMatriculaList;
-
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "programa_seq")
-    @SequenceGenerator(name = "programa_seq", sequenceName = "programa_seq",  initialValue = 1, allocationSize = 100)
+    @SequenceGenerator(name = "programa_seq", sequenceName = "programa_seq",  initialValue = 3, allocationSize = 100)
     @NotNull
     @Column(name = "idprograma")
     private Integer idprograma;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idprograma")
+    @Size(max = 45)
+    @Column(name = "nombre")
+    private String nombre;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idprograma", fetch = FetchType.EAGER)
     private List<Estudiante> estudianteList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idprograma", fetch = FetchType.EAGER)
+    private List<DetalleMatricula> detalleMatriculaList;
     @JoinColumn(name = "idtipo_semestre", referencedColumnName = "idtipo_semestre")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private TipoSemestre idtipoSemestre;
-    
-    
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idprograma")
-    private List<Materia> materiaList;
 
     public Programa() {
     }
@@ -77,6 +73,13 @@ public class Programa implements Serializable {
         this.idprograma = idprograma;
     }
 
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
 
     @XmlTransient
     public List<Estudiante> getEstudianteList() {
@@ -85,6 +88,15 @@ public class Programa implements Serializable {
 
     public void setEstudianteList(List<Estudiante> estudianteList) {
         this.estudianteList = estudianteList;
+    }
+
+    @XmlTransient
+    public List<DetalleMatricula> getDetalleMatriculaList() {
+        return detalleMatriculaList;
+    }
+
+    public void setDetalleMatriculaList(List<DetalleMatricula> detalleMatriculaList) {
+        this.detalleMatriculaList = detalleMatriculaList;
     }
 
     public TipoSemestre getIdtipoSemestre() {
@@ -119,33 +131,5 @@ public class Programa implements Serializable {
     public String toString() {
         return "com.unicomfacauca.demo.domain.entities.Programa[ idprograma=" + idprograma + " ]";
     }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    @XmlTransient
-    public List<DetalleMatricula> getDetalleMatriculaList() {
-        return detalleMatriculaList;
-    }
-
-    public void setDetalleMatriculaList(List<DetalleMatricula> detalleMatriculaList) {
-        this.detalleMatriculaList = detalleMatriculaList;
-    }
-    
-    @XmlTransient
-    public List<Materia> getMateriaList() {
-        return materiaList;
-    }
-
-    public void setMateriaList(List<Materia> materiaList) {
-        this.materiaList = materiaList;
-    }
-    
-    
     
 }

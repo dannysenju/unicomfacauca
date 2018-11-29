@@ -1,4 +1,4 @@
-#menu-matricula\:matricula-form\:students_paginator_bottom .ui-paginator-page {
+.ui-paginator-page {
     font-weight: bold;
     text-shadow: none !important;
     box-shadow: none !important;
@@ -9,7 +9,7 @@
     color: #000;
 }
 
-#menu-matricula\:matricula-form\:students_paginator_bottom .ui-paginator-page:hover {
+ .ui-paginator-page:hover {
     font-weight: bold;
     text-shadow: none !important;
     box-shadow: none !important;
@@ -20,7 +20,7 @@
     color: #000;
 }
 
-#menu-matricula\:matricula-form\:students_paginator_bottom .ui-state-active, .ui-paginator-page .ui-state-active {
+ .ui-state-active, .ui-paginator-page .ui-state-active {
     color: #000;
     background:  #dddfe2 !important;
     font-weight: bold;
@@ -29,7 +29,7 @@
     border: 1px solid rgba(0, 40, 100, 0.35) !important;
 }
 
-#menu-matricula\:matricula-form\:students_paginator_bottom .ui-paginator-first{
+ .ui-paginator-first{
     font-weight: bold;
     text-shadow: none !important;
     box-shadow: none !important;
@@ -39,7 +39,7 @@
     border-radius: 3px !important;
     color: #000;
 }
-#menu-matricula\:matricula-form\:students_paginator_bottom .ui-paginator-first:hover {
+ .ui-paginator-first:hover {
     font-weight: bold;
     text-shadow: none !important;
     box-shadow: none !important;
@@ -49,7 +49,7 @@
     border-radius: 3px !important;
     color: #000;
 }
-#menu-matricula\:matricula-form\:students_paginator_bottom .ui-paginator-next{
+ .ui-paginator-next{
     font-weight: bold;
     text-shadow: none !important;
     box-shadow: none !important;
@@ -59,7 +59,7 @@
     border-radius: 3px !important;
     color: #000;
 }
-#menu-matricula\:matricula-form\:students_paginator_bottom .ui-paginator-next:hover {
+.ui-paginator-next:hover {
     font-weight: bold;
     text-shadow: none !important;
     box-shadow: none !important;
@@ -69,7 +69,7 @@
     border-radius: 3px !important;
     color: #000;
 }
-#menu-matricula\:matricula-form\:students_paginator_bottom .ui-paginator-prev{
+ .ui-paginator-prev{
     font-weight: bold;
     text-shadow: none !important;
     box-shadow: none !important;
@@ -79,7 +79,7 @@
     border-radius: 3px !important;
     color: #000;
 }
-#menu-matricula\:matricula-form\:students_paginator_bottom .ui-paginator-prev:hover {
+.ui-paginator-prev:hover {
     font-weight: bold;
     text-shadow: none !important;
     box-shadow: none !important;
@@ -89,7 +89,7 @@
     border-radius: 3px !important;
     color: #000;
 }
-#menu-matricula\:matricula-form\:students_paginator_bottom .ui-paginator-last{
+ .ui-paginator-last{
     font-weight: bold;
     text-shadow: none !important;
     box-shadow: none !important;
@@ -99,7 +99,7 @@
     border-radius: 3px !important;
     color: #000;
 }
-#menu-matricula\:matricula-form\:students_paginator_bottom .ui-paginator-last:hover {
+.ui-paginator-last:hover {
     font-weight: bold;
     text-shadow: none !important;
     box-shadow: none !important;
@@ -110,7 +110,7 @@
     color: #000;
 }
 
-#menu-matricula\:matricula-form\:students_paginator_bottom .ui-paginator-rpp-options {
+.ui-paginator-rpp-options {
     font-weight: bold;
     text-shadow: none !important;
     box-shadow: none !important;
@@ -121,7 +121,7 @@
     color: #000;
     cursor: pointer;
 }
-#menu-matricula\:matricula-form\:students_paginator_bottom .ui-paginator-rpp-options:hover {
+.ui-paginator-rpp-options:hover {
     font-weight: bold;
     cursor: pointer;
     text-shadow: none !important;
@@ -131,4 +131,52 @@
     border: 1px solid rgba(0, 40, 100, 0.35) !important;
     border-radius: 3px !important;
     color: #000;
+}
+
+.ui-fieldset, .ui-fieldset .ui-fieldset-legend {
+    padding: 3px !important;
+    border: 1px solid rgba(0, 40, 100, 0.12) !important;
+    background: #f8f9fa !important;
+    color: #16181b !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    font-size: 16px !important;
+}
+
+#menu-matricula\:form-matr-final\:accordion\:availableSchedules td {
+    border: 1px solid rgba(0, 40, 100, 0.12) !important;
+    background: #fff !important;
+    color: #16181b !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    font-size: 16px !important;
+    
+}
+#menu-matricula\:form-matr-final\:accordion\:availableSchedules th {
+    border: 1px solid rgba(0, 40, 100, 0.12) !important;
+    background: #fff !important;
+    color: #16181b !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    font-size: 16px !important;
+    
+}
+
+
+#menu-matricula\:form-matr-final\:pickList-schedule .ui-picklist-list {
+    width: 470px;
+}
+
+#menu-matricula\:form-matr-final\:pickList-schedule .ui-picklist-button-add-all {
+	visibility: hidden !important;
+}
+
+
+.card-hidden-prime {
+    text-shadow: none !important;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
+    border-radius: 3px !important;
+    box-shadow: none !important;
+    background: #fff !important;
+    border-left: 3px solid #74D14C !important
 }

@@ -11,6 +11,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -41,6 +42,13 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Estudiante.findByEmail", query = "SELECT e FROM Estudiante e WHERE e.email = :email")})
 public class Estudiante implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "student_seq")
+    @SequenceGenerator(name = "student_seq", sequenceName = "student_seq",  initialValue = 3, allocationSize = 100)
+    @NotNull
+    @Column(name = "idestudiante")
+    private Integer idestudiante;
     @Size(max = 45)
     @Column(name = "nombre")
     private String nombre;
@@ -48,22 +56,13 @@ public class Estudiante implements Serializable {
     @Column(name = "apellido")
     private String apellido;
     // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
-    // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
     @Size(max = 45)
     @Column(name = "email")
     private String email;
-
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "estudiante_seq")
-    @SequenceGenerator(name = "estudiante_seq", sequenceName = "estudiante_seq",  initialValue = 1, allocationSize = 100)
-    @NotNull
-    @Column(name = "idestudiante")
-    private Integer idestudiante;
     @JoinColumn(name = "idprograma", referencedColumnName = "idprograma")
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private Programa idprograma;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idestudiante")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idestudiante", fetch = FetchType.EAGER)
     private List<Matricula> matriculaList;
 
     public Estudiante() {
@@ -81,6 +80,29 @@ public class Estudiante implements Serializable {
         this.idestudiante = idestudiante;
     }
 
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getApellido() {
+        return apellido;
+    }
+
+    public void setApellido(String apellido) {
+        this.apellido = apellido;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
     public Programa getIdprograma() {
         return idprograma;
@@ -122,30 +144,6 @@ public class Estudiante implements Serializable {
     @Override
     public String toString() {
         return "com.unicomfacauca.demo.domain.entities.Estudiante[ idestudiante=" + idestudiante + " ]";
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getApellido() {
-        return apellido;
-    }
-
-    public void setApellido(String apellido) {
-        this.apellido = apellido;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
     
 }
