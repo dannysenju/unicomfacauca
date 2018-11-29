@@ -234,11 +234,11 @@
                                         </p:column>
 
                                         <p:column filterBy="#{enroll.idestudiante.apellido}" width="120" headerText="Estudiante" footerText="contiene" filterMatchMode="contains">
-                                            <div class="col-sm-4 m-0">
+                                            <div class="col-sm-12 m-0">
                                                 <div class="media-body">
                                                     <h6 class="m-0">#{enroll.idestudiante.nombre} #{enroll.idestudiante.apellido}</h6>
-                                                    <p class="text-muted m-0">#{enroll.idestudiante.idprograma.nombre}</p>
-                                                    <p class="text-muted m-0">#{enroll.idestudiante.email}</p>
+                                                    <p class="text-muted m-0">Programa: #{enroll.idestudiante.idprograma.nombre}</p>
+                                                    <p class="text-muted m-0">Email: #{enroll.idestudiante.email}</p>
                                                 </div>
                                             </div>
                                         </p:column>
